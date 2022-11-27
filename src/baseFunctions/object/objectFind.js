@@ -1,0 +1,77 @@
+const { clone, ConditionParser } = require("../../utils/BaseUtils")
+
+module.exports = {
+    description: 'Finds an object property which meets condition. Returns nothing when no property meets condition.',
+    usage: 'name | condition | textToReturn',
+    parameters: [
+        {
+            name: 'Name',
+            description: 'The object name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Condition',
+            description: 'The condition to find property. Use {objProperty} for get the property, and {objValue} for get it value.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Text to return',
+            description: 'Text to be returned for found property. Use {objProperty} for get the property, and {objValue} for get it value.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    dontUnescape: [1],
+    dontParse: [1, 2],
+    run: async (d, name, condition, textToReturn) => {
+        if (name == undefined) return new d.error("required", d, 'name')
+        if (condition == undefined) return new d.error("required", d, 'condition')
+        if (textToReturn == undefined) return new d.error("required", d, 'text to return')
+
+        if (typeof name === 'object') {
+            let parsedname = await name.parse(d)
+            if (parsedname.error) return;
+            name = parsedname.result
+        }
+
+        if (!d.data.objects[name]) return new d.error("invalid", d, 'object name', name);
+
+        let properties = [];
+
+        for (const property in d.data.objects[name]) {
+            if (Object.prototype.hasOwnProperty.call(d.data.objects[name], property)) {
+                let value = d.data.objects[name][property]
+
+                let conditionData = clone(d)
+
+                const placeholders = d.data.placeholders.slice(0)
+
+                conditionData.data.placeholders.push(
+                    { name: '{objProperty}', value: property},
+                    { name: '{objValue}', value}
+                )
+
+                const parsedCondition = await condition.parse(conditionData)
+                d.err = conditionData.err
+                if (parsedCondition.error) return;
+
+                let conditionResult = ConditionParser.parse(d, parsedCondition.result)
+
+                if (conditionResult) {
+                    const parsedText = await textToReturn.parse(conditionData)
+                    d.err = conditionData.err
+                    if (parsedText.error) return;
+
+                    properties.push(parsedText.result)
+                }
+                
+                Object.assign(d.data, conditionData.data)
+                d.data.placeholders = placeholders
+            }
+        }
+
+        return properties[0];
+    }
+}
