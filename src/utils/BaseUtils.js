@@ -160,7 +160,7 @@ module.exports = class BaseUtils {
         }
 
         newInstance() {
-return BaseUtils.clone(this.__data)
+            return BaseUtils.clone(this.__data)
         }
     }
 
