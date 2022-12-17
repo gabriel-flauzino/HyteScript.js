@@ -63,6 +63,11 @@ types.add('roleCreate')
 types.add('roleDelete')
 types.add('roleEdit')
 
+// stickerCreate/Delete/Edit
+types.add('stickerCreate')
+types.add('stickerDelete')
+types.add('stickerEdit')
+
 // ready, rateLimit
 types.add('ready')
 types.add('rateLimit')
