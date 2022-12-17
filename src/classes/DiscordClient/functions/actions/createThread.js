@@ -1,6 +1,8 @@
+const { ChannelType, ThreadAutoArchiveDuration } = require("discord.js")
+
 module.exports = {
     description: 'Creates a thread in a channel.',
-    usage: 'name? | messageId? | type? | autoArchiveDuration? | invitable? | channelId? | guildId? | returnId?',
+    usage: 'name | messageId? | type? | autoArchiveDuration? | invitable? | channelId? | guildId? | returnId?',
     parameters: [
         {
             name: 'Name',
@@ -12,7 +14,7 @@ module.exports = {
             name: 'Message ID',
             description: 'The message to assign thread.',
             optional: 'true',
-            defaultValue: 'Author\'s message ID'
+            defaultValue: 'none'
         },
         {
             name: 'Type',
@@ -22,7 +24,7 @@ module.exports = {
         },
         {
             name: 'Autoarchive duration',
-            description: 'The time to autoarchive (60, 1440, 3420, 10080 or max).',
+            description: 'The time to autoarchive (60, 1440, 3420, 10080).',
             optional: 'true',
             defaultValue: '60'
         },
@@ -55,19 +57,18 @@ module.exports = {
         if (name == undefined) return new d.error("required", d, 'name')
 
         const threadTypes = {
-            public: 'GUILD_PUBLIC_THREAD',
-            private: 'GUILD_PRIVATE_THREAD'
+            public: ChannelType.PublicThread,
+            private: ChannelType.PrivateThread
         }
 
         let threadType = threadTypes[type.toLowerCase()]
         if (!threadType) return new d.error("invalid", d, 'type', type)
 
         const archiveDurationTypes = {
-            60: 60,
-            1440: 1440,
-            4320: 4320,
-            10080: 10080,
-            max: 'MAX'
+            60: ThreadAutoArchiveDuration.OneHour,
+            1440: ThreadAutoArchiveDuration.OneDay,
+            4320: ThreadAutoArchiveDuration.ThreeDays,
+            10080: ThreadAutoArchiveDuration.OneWeek
         }
 
         let archiveDurationType = archiveDurationTypes[autoArchiveDuration.toLowerCase()]

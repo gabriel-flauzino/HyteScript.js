@@ -3,37 +3,25 @@ const { Time, clone, Functions } = require('../../utils/utils');
 
 module.exports = {
     description: 'Edits a channel.',
-    usage: 'name | type? | options? | guildId? | returnId? | reason?',
+    usage: 'options | channelId? | guildId? | reason?',
     parameters: [
         {
-            name: 'Name',
-            description: 'The channel name.',
+            name: 'Options',
+            description: 'The options for editing channel. Read #(createChannel) in HyteScript wikis for detailed explanation.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: 'Type',
-            description: 'The channel type.',
+            name: 'channel ID',
+            description: 'The channel to be edited.',
             optional: 'true',
-            defaultValue: 'text'
-        },
-        {
-            name: 'Options',
-            description: 'The slash channel options. Read #(newChannel) in HyteScript wikis for detailed explanation.',
-            optional: 'true',
-            defaultValue: 'none'
+            defaultValue: 'Channel ID'
         },
         {
             name: 'Guild ID',
-            description: 'The guild to create the channel.',
+            description: 'The guild which the channel belongs to.',
             optional: 'true',
             defaultValue: 'Current guild ID'
-        },
-        {
-            name: 'Return ID',
-            description: 'Whether to return new channel ID or not.',
-            optional: 'true',
-            defaultValue: 'false'
         },
         {
             name: 'Reason',
@@ -44,7 +32,7 @@ module.exports = {
     ],
     dontParse: [0],
     run: async (d, options, channelId = d.channel?.id, guildId = d.guild?.id, reason) => {
-        if (options == undefined) return new d.error("required", d, 'name')
+        if (options == undefined) return new d.error("required", d, 'options')
 
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return new d.error("invalid", d, 'guild ID', guildId)

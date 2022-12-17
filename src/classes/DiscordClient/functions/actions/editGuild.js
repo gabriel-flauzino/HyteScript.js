@@ -77,10 +77,7 @@ module.exports = {
                 }
             })
             .set('setAFKChannel', {
-                async run(d, channelId = d.channel?.id, guildId = d.guild?.id) {
-                    const guild = d.client.guilds.cache.get(guildId)
-                    if (!guild) return new d.error('invalid', d, 'guild ID', guildId)
-
+                async run(d, channelId = d.channel?.id) {
                     const channel = guild.channels.cache.get(channelId)
                     if (!channel) return new d.error('invalid', d, 'channel ID', channelId)
                     if (channel.type !== ChannelType.GuildVoice) return new d.error('custom', d, `provided channel "${channelId}" is not a voice channel`)
@@ -89,10 +86,7 @@ module.exports = {
                 }
             })
             .set('setSystemChannel', {
-                async run(d, channelId = d.channel?.id, guildId = d.guild?.id) {
-                    const guild = d.client.guilds.cache.get(guildId)
-                    if (!guild) return new d.error('invalid', d, 'guild ID', guildId)
-
+                async run(d, channelId = d.channel?.id) {
                     const channel = guild.channels.cache.get(channelId)
                     if (!channel) return new d.error('invalid', d, 'channel ID', channelId)
                     if (channel.type !== ChannelType.GuildText) return new d.error('custom', d, `provided channel "${channelId}" is not a text channel`)
@@ -202,10 +196,7 @@ module.exports = {
                 }
             })
             .set('setRulesChannel', {
-                async run(d, channelId = d.channel?.id, guildId = d.guild?.id) {
-                    const guild = d.client.guilds.cache.get(guildId)
-                    if (!guild) return new d.error('invalid', d, 'guild ID', guildId)
-
+                async run(d, channelId = d.channel?.id) {
                     const channel = guild.channels.cache.get(channelId)
                     if (!channel) return new d.error('invalid', d, 'channel ID', channelId)
                     if (channel.type !== ChannelType.GuildText) return new d.error('custom', d, `provided channel "${channelId}" is not a text channel`)
@@ -214,10 +205,7 @@ module.exports = {
                 }
             })
             .set('setCommunityUpdatesChannel', {
-                async run(d, channelId = d.channel?.id, guildId = d.guild?.id) {
-                    const guild = d.client.guilds.cache.get(guildId)
-                    if (!guild) return new d.error('invalid', d, 'guild ID', guildId)
-
+                async run(d, channelId = d.channel?.id) {
                     const channel = guild.channels.cache.get(channelId)
                     if (!channel) return new d.error('invalid', d, 'channel ID', channelId)
                     if (channel.type !== ChannelType.GuildText) return new d.error('custom', d, `provided channel "${channelId}" is not a text channel`)

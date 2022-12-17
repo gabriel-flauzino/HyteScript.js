@@ -35,6 +35,12 @@ module.exports = {
             defaultValue: 'none'
         },
         {
+            name: 'Guild ID',
+            description: 'The guild to create slash command.',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        },
+        {
             name: 'Return ID',
             description: 'Whether to return the slash command ID or not.',
             optional: 'true',

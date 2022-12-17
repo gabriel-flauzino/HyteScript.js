@@ -1,6 +1,6 @@
 module.exports = {
     description: 'Deletes a thread.',
-    usage: 'threadId | channelId? | guildId?',
+    usage: 'threadId | channelId? | guildId? | reason?',
     parameters: [
         {
             name: 'Thread ID',

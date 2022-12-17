@@ -12,7 +12,7 @@ module.exports = {
             name: 'Channel ID',
             description: 'The channel which the message belongs to.',
             optional: 'true',
-            defaultValue: 'Current channel ID.'
+            defaultValue: 'Current channel ID'
         }
     ],
     run: async (d, messageId = d.message?.id, channelId = d.channel?.id) => {

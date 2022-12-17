@@ -1,6 +1,6 @@
 module.exports = {
     description: 'Creates a new webhook in a channel.',
-    usage: 'name | avatar? | channelId? | returnData? | reason?',
+    usage: 'name | avatar? | isBuffer? | channelId? | returnData? | reason?',
     parameters: [
         {
             name: 'Name',
@@ -10,7 +10,7 @@ module.exports = {
         },
         {
             name: 'Avatar',
-            description: 'The webhook avatar.',
+            description: 'The webhook avatar URL.',
             optional: 'true',
             defaultValue: 'none'
         },

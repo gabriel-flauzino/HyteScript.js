@@ -49,14 +49,18 @@ module.exports = {
             const optionsData = clone(d)
 
             optionsData.functions = new Functions(optionsData.functions).set('setcolor', { 
-                run: async (d, color) => {
-                    if (color == undefined) return new d.error("required", d, 'color')
+                run: async (d, hex) => {
+                    if (hex == undefined) return new d.error("required", d, 'color')
                     
-                    let colors = ["DEFAULT", "WHITE", "AQUA", "GREEN", "BLUE", "YELLOW", "PURPLE", "LUMINOUS_VIVID_PINK", "FUCHSIA", "GOLD", "ORANGE", "RED", "GREY", "NAVY", "DARK_AQUA", "DARK_GREEN", "DARK_BLUE", "DARK_PURPLE", "DARK_VIVID_PINK", "DARK_GOLD", "DARK_ORANGE", "DARK_RED", "DARK_GREY", "DARKER_GREY", "LIGHT_GREY", "DARK_NAVY", "BLURPLE", "GREYPLE", "DARK_BUT_NOT_BLACK", "NOT_QUITE_BLACK", "RANDOM"]
+                    let resolved;
 
-                    if (!/^#[0-9A-F]{6}$/i.test(color) && !colors.includes(color.toUpperCase().replaceAll(' ', '_')) && color !== undefined) return new d.error("invalid", d, 'color hex', color)
+                    try {
+                        resolved = resolveColor(hex)
+                    } catch (e) {
+                        return new d.error('invalid', d, 'hex color or color name', hex)
+                    }
                     
-                    obj.color = color
+                    obj.color = resolved
                 }
             }).set('sethoist', { 
                 run: async (d, hoist = 'true') => {
