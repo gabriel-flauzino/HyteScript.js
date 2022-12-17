@@ -1,7 +1,7 @@
 const { clone, BaseFunctions, replaceLast, getDirFiles } = require("../../utils/BaseUtils");
 
 module.exports = {
-    description: 'Executes the case which case value matches to string. If no case matches to string, then default will be executed.',
+    description: 'Executes the case which it\'s value matches to string. If no case matches to string, then default will be executed.',
     usage: 'string | cases',
     parameters: [
         {
