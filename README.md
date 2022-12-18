@@ -10,13 +10,13 @@
 
 <h1 align="center">Installation</h1>
 
-As usual, for installing that package you need to use the command below:
+Run the following command in your console/Shell:
 
 ```bash
 npm i hytescript.js
 ```
 
-Note that HyteScript.js needs <a href="https://nodejs.org">Node.js v16.9.0 or later</a> to work properly.
+Note that HyteScript.js needs [Node.js v16.9.0 or later](https://nodejs.org) to work properly.
 
 <br>
 <h1 align="center">Index example</h1>
@@ -73,9 +73,9 @@ Closing a function, which means that you'll not be providing parameters for that
 
 # End
 
-That's it, now you have the knowledge of how hytescript syntax works. Browse the <a href="https://docs.hytescript.ga">documentation</a> to find out more.
+That's it, now you have the knowledge of how hytescript syntax works. Browse the [documentation](https://docs.hytescript.ga) to find out more.
 
-HyteScript is totally made by **paebukoa** 💖, using the package <a href="https://discord.js.org">Discord.js</a>.<br>
-You can anyways contribute to HyteScript.js in it <a href="https://github.com/paebukoa/HyteScript.js">GitHub Repository</a>.
+HyteScript is totally made by **paebukoa** 💖, using the package [Discord.js](https://discord.js.org).<br>
+You can anyways contribute to HyteScript.js in it [GitHub Repository](https://github.com/gabriel-flauzino/HyteScript.js).
 
-See you later in <a href="https://discord.gg/fcamrq6MjT">our support</a>, if you need it!
+Me and our Staff Team will always be available in [our support](https://discord.gg/bdUENGdN88) for when you need help!
