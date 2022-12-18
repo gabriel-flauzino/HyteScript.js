@@ -1,5 +1,5 @@
 module.exports = {
-    description: 'Checks if a string is any type of number.',
+    description: 'Checks if a string is a float number.',
     usage: 'string',
     parameters: [
         {
@@ -12,5 +12,5 @@ module.exports = {
     run: async (d, string) => {
     if (string == undefined) return new d.error("required", d, 'string')
 
-    return !isNaN(string);
+    return isNaN(string) ? 'NaN' : !Number.isInteger(Number(string));
 }};
