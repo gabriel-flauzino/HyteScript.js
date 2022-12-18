@@ -4,8 +4,8 @@
 </div>
 
 <div align="center"> <!-- short description -->
-<p>HyteScript is a package that simplifies coding anything.</p>
-<p>It's currently mainly used for creating Discord bots, but in the future I intend to make more compatibility for making anything you want.</p>
+<p>A package for programming anything you want with ease.</p>
+<p>WARNING: not full compatibility with other things besides Discord bot creation. Expect more compatibility in v5.</p>
 </div>
 
 <h1 align="center">Installation</h1>
