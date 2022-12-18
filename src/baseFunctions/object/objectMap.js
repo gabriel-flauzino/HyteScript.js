@@ -58,7 +58,7 @@ module.exports = {
 
             const parsedCode = await code.parse(codeData)
             d.err = codeData.err
-            if (parsedCode.error) return;
+            if (d.err) return;
             
             Object.assign(d.data, codeData.data)
             d.data.placeholders = placeholders
