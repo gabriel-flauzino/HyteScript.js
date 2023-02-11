@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SelectMenuBuilder, SelectMenuOptionBuilder } = require('discord.js')
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelSelectMenuBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, UserSelectMenuBuilder } = require('discord.js')
 const { clone, Functions } = require('../../utils/utils')
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
 
         let actionRowData = clone(d)
         actionRowData.functions = new Functions(actionRowData.functions)
-        .set('addSelectMenu', {
+        .set('addStringSelectMenu', {
             dontParse: [2],
             async run(d, placeholder, customId, options, min = '1', max, disabled = 'false') {
                 if (placeholder == undefined) return new d.error("required", d, 'placeholder')
@@ -30,7 +30,7 @@ module.exports = {
                 if (isNaN(min) || Number(min) < 1) return new d.error("invalid", d, 'min values', min);
                 if ((isNaN(max) || Number(max) < Number(min)) && max != undefined) return new d.error("invalid", d, 'max values', max);
         
-                let selectMenu = new SelectMenuBuilder()
+                let selectMenu = new StringSelectMenuBuilder()
                 .setPlaceholder(placeholder)
                 .setCustomId(customId)
                 .setMinValues(Number(min))
@@ -44,7 +44,7 @@ module.exports = {
                         if (label == undefined) return new d.error("required", d, 'label')
                         if (value == undefined) return new d.error("required", d, 'value')
         
-                        let selectMenuOption = new SelectMenuOptionBuilder()
+                        let selectMenuOption = new StringSelectMenuOptionBuilder()
                         .setLabel(label)
                         .setValue(value)
                         .setDefault(defaultOption === 'true')
@@ -60,6 +60,60 @@ module.exports = {
                 d.err = optionsData.err
                 if (d.err) return;
                 d.data = optionsData.data
+        
+                actionRow.addComponents(selectMenu)
+            }
+        })
+        .set('addUserSelectMenu', {
+            async run(d, placeholder, customId, min = '1', max, disabled = 'false') {
+                if (placeholder == undefined) return new d.error("required", d, 'placeholder')
+                if (customId == undefined) return new d.error("required", d, 'custom ID')
+        
+                if (isNaN(min) || Number(min) < 1) return new d.error("invalid", d, 'min values', min);
+                if ((isNaN(max) || Number(max) < Number(min)) && max != undefined) return new d.error("invalid", d, 'max values', max);
+        
+                let selectMenu = new UserSelectMenuBuilder()
+                .setPlaceholder(placeholder)
+                .setCustomId(customId)
+                .setMinValues(Number(min))
+                .setDisabled(disabled === 'true')
+        
+                if (max != undefined) selectMenu.setMaxValues(Number(max))
+        
+                actionRow.addComponents(selectMenu)
+            }
+        })
+        .set('addChannelSelectMenu', {
+            dontParse: [2],
+            async run(d, placeholder, customId, options, min = '1', max, disabled = 'false') {
+                if (placeholder == undefined) return new d.error("required", d, 'placeholder')
+                if (customId == undefined) return new d.error("required", d, 'custom ID')
+        
+                if (isNaN(min) || Number(min) < 1) return new d.error("invalid", d, 'min values', min);
+                if ((isNaN(max) || Number(max) < Number(min)) && max != undefined) return new d.error("invalid", d, 'max values', max);
+        
+                let selectMenu = new ChannelSelectMenuBuilder()
+                .setPlaceholder(placeholder)
+                .setCustomId(customId)
+                .setMinValues(Number(min))
+                .setDisabled(disabled === 'true')
+        
+                if (max != undefined) selectMenu.setMaxValues(Number(max))
+                if(options != undefined) {
+                    let optionsData = clone(d)
+                    optionsData.functions = new Functions(optionsData.functions).set('setchanneltypes', { 
+                        run: async (d, ...types) => {
+                            if (types == undefined) return new d.error("required", d, 'channel types')
+                            let channelTypes = types
+                            selectMenu.setChannelTypes(channelTypes)
+                        }
+                    })
+        
+                    await options.parse(optionsData, true)
+                    d.err = optionsData.err
+                    if (d.err) return;
+                    d.data = optionsData.data
+                }
         
                 actionRow.addComponents(selectMenu)
             }
