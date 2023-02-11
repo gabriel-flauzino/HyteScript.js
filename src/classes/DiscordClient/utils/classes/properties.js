@@ -27,7 +27,7 @@ class Properties {
             guildscount: client.guilds?.cache?.size || 0,
             token: client.token,
             uptime: client.uptime,
-            totaluserscount: client.users?.cache?.size || 0,
+            totaluserscount: client.guilds?.cache?.map(g => g.memberCount ?? 0).reduce((a, b) => a + b) || 0,
             id: client.user?.id
         }
 
