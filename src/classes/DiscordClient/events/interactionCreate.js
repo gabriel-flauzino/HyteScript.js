@@ -70,7 +70,51 @@ module.exports = async d => {
             await data.command.code.parse(data)
 
         } 
-		if (interaction.isSelectMenu()) {
+		if (interaction.isStringSelectMenu()) {
+
+            let data = clone(d)
+
+            const commandData = d.commandManager.selectMenuInteraction.get(interaction.customId.toLowerCase())
+            if (!commandData) return
+
+            data.interaction = interaction
+            data.message = interaction.message
+            data.channel = interaction.channel
+            data.guild = interaction.guild
+            data.author = interaction.user
+            data.value = interaction.values
+            data.customId = interaction.customId
+            data.command = commandData
+            data.eventType = 'selectMenuInteraction'
+            data.err = false
+            data.data = d.data.newInstance()
+
+            await data.command.code.parse(data)
+
+        }
+        if (interaction.isUserSelectMenu()) {
+
+            let data = clone(d)
+
+            const commandData = d.commandManager.selectMenuInteraction.get(interaction.customId.toLowerCase())
+            if (!commandData) return
+
+            data.interaction = interaction
+            data.message = interaction.message
+            data.channel = interaction.channel
+            data.guild = interaction.guild
+            data.author = interaction.user
+            data.value = interaction.values
+            data.customId = interaction.customId
+            data.command = commandData
+            data.eventType = 'selectMenuInteraction'
+            data.err = false
+            data.data = d.data.newInstance()
+
+            await data.command.code.parse(data)
+
+        }
+        if (interaction.isChannelSelectMenu()) {
 
             let data = clone(d)
 
