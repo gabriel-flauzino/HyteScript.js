@@ -20,6 +20,7 @@
     extensions = [
       # "vscodevim.vim"
       "nullxception.cherry-theme"
+      "EditorConfig.EditorConfig"
     ];
 
     # Enable previews
