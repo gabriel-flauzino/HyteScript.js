@@ -1,40 +1,50 @@
-const { ApplicationCommandType, ContextMenuCommandBuilder } = require("discord.js")
+const {
+  ApplicationCommandType,
+  ContextMenuCommandBuilder,
+} = require("discord.js");
 
 module.exports = {
-    description: 'Creates a new context menu application command.',
-    usage: 'type | name | returnId?',
-    parameters: [
-        {
-            name: 'Type',
-            description: 'The context menu type.',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: 'Name',
-            description: 'The name of the context menu command.',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: 'Return ID',
-            description: 'Whether to return new application command ID or not.',
-            optional: 'true',
-            defaultValue: 'false'
-        }
-    ],
-    run: async (d, type, name, returnId = 'false') => {
-        if (type == undefined) return new d.error("required", d, 'type')
-        if (name == undefined) return new d.error("required", d, 'name')
-		let types = {
-			user: ApplicationCommandType.User,
-			message: ApplicationCommandType.Message
-		}
+  description: "Creates a new context menu application command.",
+  usage: "type | name | returnId?",
+  parameters: [
+    {
+      name: "Type",
+      description: "The context menu type.",
+      optional: "false",
+      defaultValue: "none",
+    },
+    {
+      name: "Name",
+      description: "The name of the context menu command.",
+      optional: "false",
+      defaultValue: "none",
+    },
+    {
+      name: "Return ID",
+      description: "Whether to return new application command ID or not.",
+      optional: "true",
+      defaultValue: "false",
+    },
+  ],
+  run: async (d, type, name, returnId = "false") => {
+    if (type == undefined) return new d.error("required", d, "type");
+    if (name == undefined) return new d.error("required", d, "name");
+    let types = {
+      user: ApplicationCommandType.User,
+      message: ApplicationCommandType.Message,
+    };
 
-        if (!(type.toLowerCase() in types)) return new d.error("invalid", d, 'type', type)
+    if (!(type.toLowerCase() in types))
+      return new d.error("invalid", d, "type", type);
 
-        let newContextMenu = await d.client.application.commands.create(new ContextMenuCommandBuilder().setType(types[type.toLowerCase()]).setName(name)).catch(e => new d.error("custom", d, e.message))
+    let newContextMenu = await d.client.application.commands
+      .create(
+        new ContextMenuCommandBuilder()
+          .setType(types[type.toLowerCase()])
+          .setName(name),
+      )
+      .catch((e) => new d.error("custom", d, e.message));
 
-        return returnId === 'true' ? newContextMenu?.id : undefined
-    }
+    return returnId === "true" ? newContextMenu?.id : undefined;
+  },
 };

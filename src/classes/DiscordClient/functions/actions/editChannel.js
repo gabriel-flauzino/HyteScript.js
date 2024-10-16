@@ -1,163 +1,205 @@
-const { PermissionsBitField, ChannelType } = require('discord.js');
-const { Time, clone, Functions } = require('../../utils/utils');
+const { PermissionsBitField, ChannelType } = require("discord.js");
+const { Time, clone, Functions } = require("../../utils/utils");
 
 module.exports = {
-    description: 'Edits a channel.',
-    usage: 'options | channelId? | guildId? | reason?',
-    parameters: [
-        {
-            name: 'Options',
-            description: 'The options for editing channel. Read #(createChannel) in HyteScript wikis for detailed explanation.',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: 'channel ID',
-            description: 'The channel to be edited.',
-            optional: 'true',
-            defaultValue: 'Channel ID'
-        },
-        {
-            name: 'Guild ID',
-            description: 'The guild which the channel belongs to.',
-            optional: 'true',
-            defaultValue: 'Current guild ID'
-        },
-        {
-            name: 'Reason',
-            description: 'Reason to be shown in audit logs.',
-            optional: 'true',
-            defaultValue: 'false'
-        }
-    ],
-    dontParse: [0],
-    run: async (d, options, channelId = d.channel?.id, guildId = d.guild?.id, reason) => {
-        if (options == undefined) return new d.error("required", d, 'options')
+  description: "Edits a channel.",
+  usage: "options | channelId? | guildId? | reason?",
+  parameters: [
+    {
+      name: "Options",
+      description:
+        "The options for editing channel. Read #(createChannel) in HyteScript wikis for detailed explanation.",
+      optional: "false",
+      defaultValue: "none",
+    },
+    {
+      name: "channel ID",
+      description: "The channel to be edited.",
+      optional: "true",
+      defaultValue: "Channel ID",
+    },
+    {
+      name: "Guild ID",
+      description: "The guild which the channel belongs to.",
+      optional: "true",
+      defaultValue: "Current guild ID",
+    },
+    {
+      name: "Reason",
+      description: "Reason to be shown in audit logs.",
+      optional: "true",
+      defaultValue: "false",
+    },
+  ],
+  dontParse: [0],
+  run: async (
+    d,
+    options,
+    channelId = d.channel?.id,
+    guildId = d.guild?.id,
+    reason,
+  ) => {
+    if (options == undefined) return new d.error("required", d, "options");
 
-        const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
-        
-        const channel = guild.channels.cache.get(channelId)
-        if (!channel) return new d.error('invalid', d, 'channel ID', channelId)
+    const guild = d.client.guilds.cache.get(guildId);
+    if (!guild) return new d.error("invalid", d, "guild ID", guildId);
 
-        const obj = { reason };
+    const channel = guild.channels.cache.get(channelId);
+    if (!channel) return new d.error("invalid", d, "channel ID", channelId);
 
-        if (typeof options === 'object') {
-            let optionsData = clone(d)
+    const obj = { reason };
 
-            optionsData.functions = new Functions(optionsData.functions).set('setname', {
-                async run(d, name) {
-                    if (name == undefined) return new d.error("required", d, 'name')
+    if (typeof options === "object") {
+      let optionsData = clone(d);
 
-                    obj.name = name
-                }
-            }).set('settopic', { 
-                run: async (d, topic) => {
-                    if (topic == undefined) return new d.error("required", d, 'topic')
+      optionsData.functions = new Functions(optionsData.functions)
+        .set("setname", {
+          async run(d, name) {
+            if (name == undefined) return new d.error("required", d, "name");
 
-                    obj.topic = topic
-                }
-            }).set('setnsfw', { 
-                run: async (d, nsfw = 'true') => {
-                    obj.nsfw = nsfw === 'true'
-                }
-            }).set('setbitrate', { 
-                run: async (d, bitrate) => {
-                    if (bitrate == undefined) return new d.error("required", d, 'bitrate')
+            obj.name = name;
+          },
+        })
+        .set("settopic", {
+          run: async (d, topic) => {
+            if (topic == undefined) return new d.error("required", d, "topic");
 
-                    if (isNaN(bitrate)) return new d.error("invalid", d, 'bitrate number', bitrate)
+            obj.topic = topic;
+          },
+        })
+        .set("setnsfw", {
+          run: async (d, nsfw = "true") => {
+            obj.nsfw = nsfw === "true";
+          },
+        })
+        .set("setbitrate", {
+          run: async (d, bitrate) => {
+            if (bitrate == undefined)
+              return new d.error("required", d, "bitrate");
 
-                    obj.bitrate = Number(bitrate)
-                }
-            }).set('setuserlimit', { 
-                run: async (d, userLimit) => {
-                    if (userLimit == undefined) return new d.error("required", d, 'user limit')
+            if (isNaN(bitrate))
+              return new d.error("invalid", d, "bitrate number", bitrate);
 
-                    if (isNaN(userLimit) || Number(userLimit) < 0 || Number(userLimit) > 99) return new d.error("invalid", d, 'user limit number', userLimit)
+            obj.bitrate = Number(bitrate);
+          },
+        })
+        .set("setuserlimit", {
+          run: async (d, userLimit) => {
+            if (userLimit == undefined)
+              return new d.error("required", d, "user limit");
 
-                    obj.userLimit = Number(userLimit)
-                }
-            }).set('setposition', { 
-                run: async (d, position) => {
-                    if (position == undefined) return new d.error("required", d, 'position')
+            if (
+              isNaN(userLimit) ||
+              Number(userLimit) < 0 ||
+              Number(userLimit) > 99
+            )
+              return new d.error("invalid", d, "user limit number", userLimit);
 
-                    if (isNaN(position)) return new d.error("invalid", d, 'position number', position)
+            obj.userLimit = Number(userLimit);
+          },
+        })
+        .set("setposition", {
+          run: async (d, position) => {
+            if (position == undefined)
+              return new d.error("required", d, "position");
 
-                    obj.position = Number(position)
-                }
-            }).set('setslowmode', { 
-                run: async (d, time) => {
-                    if (time == undefined) return new d.error("required", d, 'time')
+            if (isNaN(position))
+              return new d.error("invalid", d, "position number", position);
 
-                    let parsedTime = Time.parse(time)
-                    if (parsedTime.error) return new d.error("invalid", d, 'time', time)
+            obj.position = Number(position);
+          },
+        })
+        .set("setslowmode", {
+          run: async (d, time) => {
+            if (time == undefined) return new d.error("required", d, "time");
 
-                    obj.rateLimitPerUser = parsedTime.ms / 1000
-                }
-            }).set('setparent', { 
-                run: async (d, parentId) => {
-                    if (parentId == undefined) return new d.error("required", d, 'parent ID')
+            let parsedTime = Time.parse(time);
+            if (parsedTime.error)
+              return new d.error("invalid", d, "time", time);
 
-                    obj.parent = parentId
-                }
-            }).set('addpermissions', { 
-                run: async (d, roleId, ...permissions) => {
-                    if (roleId == undefined) return new d.error("required", d, 'roleId')
+            obj.rateLimitPerUser = parsedTime.ms / 1000;
+          },
+        })
+        .set("setparent", {
+          run: async (d, parentId) => {
+            if (parentId == undefined)
+              return new d.error("required", d, "parent ID");
 
-                    if (roleId.toLowerCase() === 'everyone') roleId = d.guild?.id
+            obj.parent = parentId;
+          },
+        })
+        .set("addpermissions", {
+          run: async (d, roleId, ...permissions) => {
+            if (roleId == undefined)
+              return new d.error("required", d, "roleId");
 
-                    if (!obj.permissionOverwrites) obj.permissionOverwrites = []
+            if (roleId.toLowerCase() === "everyone") roleId = d.guild?.id;
 
-                    const permObj = {
-                        allow: [],
-                        deny: []
-                    }
+            if (!obj.permissionOverwrites) obj.permissionOverwrites = [];
 
-                    let id = guild.roles.cache.get(roleId)
+            const permObj = {
+              allow: [],
+              deny: [],
+            };
 
-                    if (roleId !== d.guild?.id) {
-                        if (!id) {
-                            id = guild.members.cache.get(roleId)
-                            if (!id) return new d.error("custom", d, `invalid ID in "${roleId}": Must be a role ID, member ID or "everyone"`)
-                        }
-                    } else {
-                        id = roleId
-                    }           
+            let id = guild.roles.cache.get(roleId);
 
-                    const perms = Object.keys(PermissionsBitField.Flags)
+            if (roleId !== d.guild?.id) {
+              if (!id) {
+                id = guild.members.cache.get(roleId);
+                if (!id)
+                  return new d.error(
+                    "custom",
+                    d,
+                    `invalid ID in "${roleId}": Must be a role ID, member ID or "everyone"`,
+                  );
+              }
+            } else {
+              id = roleId;
+            }
 
-                    for (const permission of permissions) {
-                        if (permission.startsWith('+')) {
-                            let perm = permission.replace('+', '')
-                            if (!perms.includes(perm)) return new d.error("invalid", d, 'permission', perm)
+            const perms = Object.keys(PermissionsBitField.Flags);
 
-                            permObj.allow.push(perm)
-                        } else if (permission.startsWith('-')) {
-                            let perm = permission.replace('-', '')
-                            if (!perms.includes(perm)) return new d.error("invalid", d, 'permission', perm)
+            for (const permission of permissions) {
+              if (permission.startsWith("+")) {
+                let perm = permission.replace("+", "");
+                if (!perms.includes(perm))
+                  return new d.error("invalid", d, "permission", perm);
 
-                            permObj.deny.push(perm)
-                        } else return new d.error("custom", d, 'permissions must starts with + (allow) or - (deny), e.g. "+ViewChannel".')
-                    }
+                permObj.allow.push(perm);
+              } else if (permission.startsWith("-")) {
+                let perm = permission.replace("-", "");
+                if (!perms.includes(perm))
+                  return new d.error("invalid", d, "permission", perm);
 
-                    obj.permissionOverwrites.push({
-                        id,
-                        allow: permObj.allow,
-                        deny: permObj.deny
-                    })
-                }
-            }).set('syncpermissions', {
-                async run() {
-                    obj.lockPermissions = true
-                }
-            })
+                permObj.deny.push(perm);
+              } else
+                return new d.error(
+                  "custom",
+                  d,
+                  'permissions must starts with + (allow) or - (deny), e.g. "+ViewChannel".',
+                );
+            }
 
-            await options.parse(optionsData, true)
-            d.err = optionsData.err
-            if (d.err) return;
-            d.data = optionsData.data
-        }
+            obj.permissionOverwrites.push({
+              id,
+              allow: permObj.allow,
+              deny: permObj.deny,
+            });
+          },
+        })
+        .set("syncpermissions", {
+          async run() {
+            obj.lockPermissions = true;
+          },
+        });
 
-        await channel.edit(obj).catch(e => new d.error("custom", d, e.message))
+      await options.parse(optionsData, true);
+      d.err = optionsData.err;
+      if (d.err) return;
+      d.data = optionsData.data;
     }
+
+    await channel.edit(obj).catch((e) => new d.error("custom", d, e.message));
+  },
 };

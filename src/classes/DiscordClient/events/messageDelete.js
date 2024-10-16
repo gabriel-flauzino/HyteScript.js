@@ -1,29 +1,40 @@
 const { clone, replaceLast } = require("../utils/utils");
 
-module.exports = async d => {
-    let requiredIntents = ['GuildMessages', 'MessageContent']
+module.exports = async (d) => {
+  let requiredIntents = ["GuildMessages", "MessageContent"];
 
-    if (requiredIntents.find(intent => !d.clientOptions.intents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
+  if (
+    requiredIntents.find((intent) => !d.clientOptions.intents.includes(intent))
+  )
+    new d.error(
+      "requiredIntent",
+      replaceLast(
+        __filename.replace("/", "\\").split("\\").at("-1"),
+        ".js",
+        "",
+      ),
+      ...requiredIntents,
+    );
 
-    d.client.on('messageDelete', async message => {
-        d.commandManager.messageDelete.forEach(async commandData => {
-            let data = clone(d)
+  d.client.on("messageDelete", async (message) => {
+    d.commandManager.messageDelete.forEach(async (commandData) => {
+      let data = clone(d);
 
-            let contentData = {
-                args: message.content?.split?.(" ")
-            }
+      let contentData = {
+        args: message.content?.split?.(" "),
+      };
 
-            data.message = message
-            data.guild = message.guild
-            data.channel = message.channel
-            data.author = message.author
-            data.command = commandData
-            data.eventType = 'messageDelete'
-            data.args = contentData.args
-            data.err = false
-            data.data = d.data.newInstance()
+      data.message = message;
+      data.guild = message.guild;
+      data.channel = message.channel;
+      data.author = message.author;
+      data.command = commandData;
+      data.eventType = "messageDelete";
+      data.args = contentData.args;
+      data.err = false;
+      data.data = d.data.newInstance();
 
-            await data.command.code.parse(data)
-        });
-    })
-}
+      await data.command.code.parse(data);
+    });
+  });
+};

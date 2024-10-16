@@ -1,49 +1,62 @@
 module.exports = {
-    description: 'Adds a member to a thread.',
-    usage: 'threadId | memberId? | channelId? | guildId?',
-    parameters: [
-        {
-            name: 'Thread ID',
-            description: 'The thread to add member.',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: 'Member ID',
-            description: 'The member to be added.',
-            optional: 'true',
-            defaultValue: 'Author ID'
-        },
-        {
-            name: 'Channel ID',
-            description: 'The channel which the thread belongs to.',
-            optional: 'true',
-            defaultValue: 'Current channel ID'
-        },
-        {
-            name: 'Guild ID',
-            description: 'The guild which the channel belongs to.',
-            optional: 'true',
-            defaultValue: 'Current guild ID'
-        }
-    ],
-    run: async (d, threadId, memberId = d.author?.id, channelId = d.channel?.id, guildId = d.guild?.id) => {
-        if (threadId == undefined) return new d.error("required", d, 'thread ID')
+  description: "Adds a member to a thread.",
+  usage: "threadId | memberId? | channelId? | guildId?",
+  parameters: [
+    {
+      name: "Thread ID",
+      description: "The thread to add member.",
+      optional: "false",
+      defaultValue: "none",
+    },
+    {
+      name: "Member ID",
+      description: "The member to be added.",
+      optional: "true",
+      defaultValue: "Author ID",
+    },
+    {
+      name: "Channel ID",
+      description: "The channel which the thread belongs to.",
+      optional: "true",
+      defaultValue: "Current channel ID",
+    },
+    {
+      name: "Guild ID",
+      description: "The guild which the channel belongs to.",
+      optional: "true",
+      defaultValue: "Current guild ID",
+    },
+  ],
+  run: async (
+    d,
+    threadId,
+    memberId = d.author?.id,
+    channelId = d.channel?.id,
+    guildId = d.guild?.id,
+  ) => {
+    if (threadId == undefined) return new d.error("required", d, "thread ID");
 
-        const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
+    const guild = d.client.guilds.cache.get(guildId);
+    if (!guild) return new d.error("invalid", d, "guild ID", guildId);
 
-        const channel = guild.channels.cache.get(channelId)
-        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
+    const channel = guild.channels.cache.get(channelId);
+    if (!channel) return new d.error("invalid", d, "channel ID", channelId);
 
-        if (!channel.threads) return new d.error("custom", d, 'provided channel doesn\'t support threads')
+    if (!channel.threads)
+      return new d.error(
+        "custom",
+        d,
+        "provided channel doesn't support threads",
+      );
 
-        const member = guild.members.cache.get(memberId)
-        if (!member) return new d.error("invalid", d, 'member ID', memberId)
+    const member = guild.members.cache.get(memberId);
+    if (!member) return new d.error("invalid", d, "member ID", memberId);
 
-        const thread = channel.threads.cache.get(threadId)
-        if (!thread) return new d.error("invalid", d, 'thread ID', threadId)
+    const thread = channel.threads.cache.get(threadId);
+    if (!thread) return new d.error("invalid", d, "thread ID", threadId);
 
-        await thread.members.add(member).catch(e => new d.error("custom", d, e.message))
-    }
+    await thread.members
+      .add(member)
+      .catch((e) => new d.error("custom", d, e.message));
+  },
 };

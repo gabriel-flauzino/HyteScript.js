@@ -1,25 +1,36 @@
-const { clone, replaceLast } = require("../utils/utils")
+const { clone, replaceLast } = require("../utils/utils");
 
-module.exports = async d => {
-    let requiredIntents = ['Guilds']
+module.exports = async (d) => {
+  let requiredIntents = ["Guilds"];
 
-    if (requiredIntents.find(intent => !d.clientOptions.intents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
-    
-    d.client.on('roleUpdate', async (oldRole, newRole) => {
-        d.commandManager.roleEdit.forEach(async commandData => {
-            let data = clone(d)
-    
-            data.role = newRole
-            data.guild = newRole.guild
-            data.command = commandData
-            data.old = oldRole
-            data.new = newRole
-            data.newType = 'role'
-            data.eventType = 'roleEdit'
-            data.err = false
-            data.data = d.data.newInstance()
+  if (
+    requiredIntents.find((intent) => !d.clientOptions.intents.includes(intent))
+  )
+    new d.error(
+      "requiredIntent",
+      replaceLast(
+        __filename.replace("/", "\\").split("\\").at("-1"),
+        ".js",
+        "",
+      ),
+      ...requiredIntents,
+    );
 
-            await data.command.code.parse(data)
-        })
-    })
-}
+  d.client.on("roleUpdate", async (oldRole, newRole) => {
+    d.commandManager.roleEdit.forEach(async (commandData) => {
+      let data = clone(d);
+
+      data.role = newRole;
+      data.guild = newRole.guild;
+      data.command = commandData;
+      data.old = oldRole;
+      data.new = newRole;
+      data.newType = "role";
+      data.eventType = "roleEdit";
+      data.err = false;
+      data.data = d.data.newInstance();
+
+      await data.command.code.parse(data);
+    });
+  });
+};

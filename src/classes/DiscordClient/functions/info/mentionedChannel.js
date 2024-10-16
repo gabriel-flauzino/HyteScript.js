@@ -1,30 +1,34 @@
 const { getProperty } = require("../../utils/utils");
 
 module.exports = {
-    description: 'Returns a property of a mentioned channel.',
-    usage: 'index? | property?',
-    parameters: [
-        {
-            name: 'Index',
-            description: 'The index of the mentioned channel.',
-            optional: 'true',
-            defaultValue: '1'
-        },
-        {
-            name: 'Property',
-            description: 'The channel property to be returned.',
-            optional: 'true',
-            defaultValue: 'ID'
-        }
-    ],
-    run: async (d, index = '1', property = 'id') => {
-        if (isNaN(index) && Number(index) < 1) return new d.error("invalid", d, 'index', index);
+  description: "Returns a property of a mentioned channel.",
+  usage: "index? | property?",
+  parameters: [
+    {
+      name: "Index",
+      description: "The index of the mentioned channel.",
+      optional: "true",
+      defaultValue: "1",
+    },
+    {
+      name: "Property",
+      description: "The channel property to be returned.",
+      optional: "true",
+      defaultValue: "ID",
+    },
+  ],
+  run: async (d, index = "1", property = "id") => {
+    if (isNaN(index) && Number(index) < 1)
+      return new d.error("invalid", d, "index", index);
 
-        const mentions = [...d.message.mentions.channels.values()];
-        const channelData = Number(index) > 0 ? mentions.at(Number(index) - 1) : mentions.at(Number(index)); 
+    const mentions = [...d.message.mentions.channels.values()];
+    const channelData =
+      Number(index) > 0
+        ? mentions.at(Number(index) - 1)
+        : mentions.at(Number(index));
 
-        if (!channelData) return;
+    if (!channelData) return;
 
-        return getProperty('channel', channelData, property)
-    }
+    return getProperty("channel", channelData, property);
+  },
 };
