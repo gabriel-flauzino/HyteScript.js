@@ -21,6 +21,7 @@
       # "vscodevim.vim"
       "nullxception.cherry-theme"
       "EditorConfig.EditorConfig"
+      "esbenp.prettier-vscode"
     ];
 
     # Enable previews
