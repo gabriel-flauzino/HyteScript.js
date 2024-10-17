@@ -22,6 +22,7 @@
       "nullxception.cherry-theme"
       "EditorConfig.EditorConfig"
       "esbenp.prettier-vscode"
+      "usernamehw.errorlens"
     ];
 
     # Enable previews
