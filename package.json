@@ -12,14 +12,14 @@
   "homepage": "https://github.com/gabriel-flauzino/HyteScript.js#readme",
   "dependencies": {
     "ascii-table": "github:sorensen/ascii-table#d58474eae61d8dd55b9698a2334e361e1ac7abbd",
-    "axios": "^0.27.2",
+    "axios": "^1.7.7",
     "discord.js": "^14.6.0"
   },
   "devDependencies": {
-    "bufferutil": "^4.0.6",
-    "fs": "^0.0.1-security",
+    "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
-    "utf-8-validate": "^5.0.9"
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3"
   },
   "keywords": [
     "discord",
